@@ -2,7 +2,6 @@ const PatientModel = require("../models/Patient");
 
 module.exports = {
   createOne: async (request, response) => {
-    const patientList = PatientModel.find();
     const {
       firstName,
       lastName,
@@ -21,18 +20,13 @@ module.exports = {
       !phoneNumber ||
       !prefferedDriver
     ) {
-      return response.render("dashboard", {
-        user: request.user,
-        error: "Error with request",
-        patientList,
-      });
+      return response.status(400).json({ message: "all fields required" });
     } else {
-      const isPresent = await PatientModel.find({ ahcccsId });
+      const isPresent = await PatientModel.findOne({ ahcccsId });
+      console.log(isPresent);
       if (isPresent) {
-        return response.render("dashboard", {
-          user: request.user,
+        return response.status(400).json({
           error: "Patient already in system",
-          patientList,
         });
       } else {
         const newPatient = await new PatientModel({
@@ -44,10 +38,9 @@ module.exports = {
           phoneNumber,
           prefferedDriver,
         });
-        await PatientModel.bulkSave(newPatient);
+        await PatientModel.bulkSave([newPatient]);
         const newPatientList = await PatientModel.find();
-        return response.render("dashboard", {
-          user: request.user,
+        return response.status(201).json({
           patientList: newPatientList,
         });
       }
@@ -66,11 +59,8 @@ module.exports = {
     } = request.body;
     const targetPatient = await PatientModel.findById({ _id: id });
     if (!targetPatient) {
-      const patientList = await PatientModel.find();
-      return response.render("dashboard", {
-        user: request.user,
+      return response.status(400).json({
         error: "error updating patient contant system admin",
-        patientList,
       });
     } else {
       if (firstName) targetPatient.firstName = firstName;
@@ -80,28 +70,38 @@ module.exports = {
       if (locationAdress) targetPatient.locationAdress = locationAdress;
       if (phoneNumber) targetPatient.phoneNumber = phoneNumber;
       if (prefferedDriver) targetPatient.prefferedDriver = prefferedDriver;
-      await PatientModel.bulkSave(targetPatient);
+      await PatientModel.bulkSave([targetPatient]);
       const newPatientList = await PatientModel.find();
-      return response.render("dashboard", {
-        user: request.user,
+      return response.status(200).json({
         patientList: newPatientList,
       });
     }
   },
   toggleActive: async (request, response) => {
-    const targetPatient = await PatientModel.findById({ _id: request.body.id });
+    const targetPatient = await PatientModel.findById({ _id: request.params.patientId });
     if (!targetPatient) {
-      const patientList = await PatientModel.find();
-      return response.render("dashboard", { user: request.user, patientList });
+      return response.status(400).json({ error: 'can not find patient'});
     } else {
       const targetPatientCurrentStatus = targetPatient.isActive;
       targetPatient.isActive = !targetPatientCurrentStatus;
-      await PatientModel.bulkSave(targetPatient);
+      await PatientModel.bulkSave([targetPatient]);
       const newPatientList = await PatientModel.find();
-      return response.render("dashboard", {
-        user: request.user,
+      return response.status(200).json({
         patientList: newPatientList,
       });
+    }
+  },
+  getAll: async (request, response) => {
+    if (request.query?.isActive) {
+      const isActiveQuery = request.query.isActive === "true";
+      const patientList = (await PatientModel.find()).filter(
+        (patient) => patient.isActive === isActiveQuery
+      );
+      console.log(patientList);
+      return response.status(200).json({ patientList: patientList });
+    } else {
+      const patientList = await PatientModel.find();
+      return response.status(200).json({ patientList: patientList });
     }
   },
 };
