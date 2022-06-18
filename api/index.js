@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const patientController = require("./patient.controller");
 const emailController = require('./email.controller');
+const authController = require('./auth.controller');
 
 router
   .route("/patient")
@@ -14,5 +15,7 @@ router
   .put(patientController.toggleActive);
 
 router.route('/send-email').post(emailController.sendEmailNotification);
+
+router.route('/login').post(authController.login);
 
 module.exports = router;
