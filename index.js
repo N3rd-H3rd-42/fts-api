@@ -4,10 +4,13 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const app = express();
+const cors = require('cors');
 const mongoose = require("mongoose");
 const routes = require("./routes");
 
 const PORT = process.env.PORT || 8000;
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
