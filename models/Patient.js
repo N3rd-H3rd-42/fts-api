@@ -14,14 +14,23 @@ const PatientSchema = new mongoose.Schema({
   locationName: {
     type: String,
   },
-  locationAdress: {
+  locationAddress1: {
+    type: String,
+  },
+  locationAddress2: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  zipCode: {
     type: String,
   },
   phoneNumber: {
     type: String,
     unique: true,
   },
-  preffedDriver: {
+  prefferedDriver: {
     type: String,
   },
   isActive: {
