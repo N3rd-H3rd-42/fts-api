@@ -7,7 +7,10 @@ module.exports = {
       lastName,
       ahcccsId,
       locationName,
-      locationAdress,
+      locationAddress1,
+      locationAddress2,
+      city,
+      zipCode,
       phoneNumber,
       prefferedDriver,
     } = request.body;
@@ -16,9 +19,11 @@ module.exports = {
       !lastName ||
       !ahcccsId ||
       !locationName ||
-      !locationAdress ||
+      !locationAddress1 ||
       !phoneNumber ||
-      !prefferedDriver
+      !prefferedDriver ||
+      !city ||
+      !zipCode
     ) {
       return response.status(400).json({ message: "all fields required" });
     } else {
@@ -34,7 +39,10 @@ module.exports = {
           lastName,
           ahcccsId,
           locationName,
-          locationAdress,
+          locationAddress1,
+          locationAddress2,
+          city,
+          zipCode,
           phoneNumber,
           prefferedDriver,
         });
@@ -53,7 +61,10 @@ module.exports = {
       lastName,
       ahcccsId,
       locationName,
-      locationAdress,
+      locationAddress1,
+      locationAddress2,
+      city,
+      zipCode,
       phoneNumber,
       prefferedDriver,
     } = request.body;
@@ -67,7 +78,10 @@ module.exports = {
       if (lastName) targetPatient.lastName = lastName;
       if (ahcccsId) targetPatient.ahcccsId = ahcccsId;
       if (locationName) targetPatient.locationName = locationName;
-      if (locationAdress) targetPatient.locationAdress = locationAdress;
+      if (locationAddress1) targetPatient.locationAddress1 = locationAddress1;
+      if (locationAddress2) targetPatient.locationAddress1 = locationAddress2;
+      if (city) targetPatient.city = city;
+      if (zipCode) targetPatient.zipCode = zipCode;
       if (phoneNumber) targetPatient.phoneNumber = phoneNumber;
       if (prefferedDriver) targetPatient.prefferedDriver = prefferedDriver;
       await PatientModel.bulkSave([targetPatient]);
@@ -78,9 +92,11 @@ module.exports = {
     }
   },
   toggleActive: async (request, response) => {
-    const targetPatient = await PatientModel.findById({ _id: request.params.patientId });
+    const targetPatient = await PatientModel.findById({
+      _id: request.params.patientId,
+    });
     if (!targetPatient) {
-      return response.status(400).json({ error: 'can not find patient'});
+      return response.status(400).json({ error: "can not find patient" });
     } else {
       const targetPatientCurrentStatus = targetPatient.isActive;
       targetPatient.isActive = !targetPatientCurrentStatus;
