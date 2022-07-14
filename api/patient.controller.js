@@ -55,8 +55,8 @@ module.exports = {
     }
   },
   updateOne: async (request, response) => {
+    const { patientId } = request.params;
     const {
-      id,
       firstName,
       lastName,
       ahcccsId,
@@ -68,7 +68,7 @@ module.exports = {
       phoneNumber,
       prefferedDriver,
     } = request.body;
-    const targetPatient = await PatientModel.findById({ _id: id });
+    const targetPatient = await PatientModel.findById({ _id: patientId });
     if (!targetPatient) {
       return response.status(400).json({
         error: "error updating patient contant system admin",
@@ -85,9 +85,9 @@ module.exports = {
       if (phoneNumber) targetPatient.phoneNumber = phoneNumber;
       if (prefferedDriver) targetPatient.prefferedDriver = prefferedDriver;
       await PatientModel.bulkSave([targetPatient]);
-      const newPatientList = await PatientModel.find();
+      const updatedPatient = await PatientModel.findById({ _id: patientId });
       return response.status(200).json({
-        patientList: newPatientList,
+        data: updatedPatient,
       });
     }
   },
