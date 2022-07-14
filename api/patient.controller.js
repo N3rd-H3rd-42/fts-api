@@ -120,4 +120,13 @@ module.exports = {
       return response.status(200).json({ patientList: patientList });
     }
   },
+  getPatientById: async (request, response) => {
+    const {patientId} = request.params;
+    const targetPatient = await PatientModel.findById(patientId);
+    if (targetPatient) {
+      return response.status(200).json({ data: targetPatient })
+    } else {
+      return response.status(404).json({ err: 'patient not found'})
+    }
+  }
 };
