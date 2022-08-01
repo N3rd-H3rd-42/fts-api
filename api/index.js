@@ -2,6 +2,7 @@ const router = require("express").Router();
 const patientController = require("./patient.controller");
 const emailController = require("./email.controller");
 const authController = require("./auth.controller");
+const smsController = require("./sms.controller");
 
 router.route("/patient").post(patientController.createOne);
 
@@ -19,5 +20,7 @@ router
 router.route("/send-email").post(emailController.sendEmailNotification);
 
 router.route("/login").post(authController.login);
+
+router.route("/request-a-ride").post(smsController.sendRideRequest);
 
 module.exports = router;
