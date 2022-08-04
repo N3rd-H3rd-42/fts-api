@@ -31,10 +31,11 @@ const TransportationRequestSchema = new mongoose.Schema({
     default: Date.now(),
   },
   // db ref one to many
-  patient: {
-    type: mongoose.Schema.ObjectId, ref: 'patient'
+  patientId: {
+    type: mongoose.ObjectId,
+    ref: "patient",
   },
-  // below is based on frontend request form 
+  // below is based on frontend request form
   requesterType: {
     type: String,
   },
@@ -52,7 +53,7 @@ const TransportationRequestSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-  }
+  },
 });
 
 const TransportationRequestModel = mongoose.model(
