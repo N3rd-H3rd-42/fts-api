@@ -1,7 +1,15 @@
-// const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
-// const twilioClient = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_NUMBER, ADMIN_NUMBER } =
+  process.env;
+const twilioClient = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 const PatientModel = require("../models/Patient");
-const TransportationRequestModel = require('../models/TransportationRequest');
+const TransportationRequestModel = require("../models/TransportationRequest");
+
+const formatTimeString = (timeString) => {
+  const hourMinuteArray = timeString.split(":");
+  return +hourMinuteArray[0] > 12
+    ? `${+hourMinuteArray[0] - 12}:${hourMinuteArray[1]} PM`
+    : `${timeString} AM`;
+};
 
 module.exports = {
   sendRideRequest: async (request, response) => {
@@ -15,18 +23,34 @@ module.exports = {
       date,
       time,
     } = request.body;
-    // console.log(request.body);
     const patient = await PatientModel.findOne({ ahcccsId: ahcccsId });
-    // console.log(patient);
     if (patient) {
-      // const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${time}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRider name: ${name}\ncontact number: ${phone}\n`;
-      // console.log(smsBody);
-      // twilioClient.messages.create({ body: 'There is a new ride request', })
-      const requestDate = new Date(`${date}T${time}:00`)
-      const newRideRequest = new TransportationRequestModel({ patient: patient._id, requesterType, name, phone, pickup, destination, })
-      await TransportationRequestModel.bulkSave([newRideRequest]);
-
-      return response.status(200).json({});
+      const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
+        time
+      )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRider name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}\n`;
+      twilioClient.messages
+        .create({
+          body: smsBody,
+          from: TWILIO_NUMBER,
+          to: ADMIN_NUMBER,
+        })
+        .then(async (message) => {
+          const requestDate = new Date(`${date}T${time}:00`);
+          const newRideRequest = new TransportationRequestModel({
+            patient: patient._id,
+            requesterType,
+            name,
+            phone,
+            pickup,
+            destination,
+            requestDate,
+          });
+          await TransportationRequestModel.bulkSave([newRideRequest]);
+          return response.status(200).json({});
+        }).catch((error) => {
+          console.log(error);
+          return response.status(500).json({ message: 'SMS gateway error'})
+        })
     } else {
       return response.status(400).json({});
     }
