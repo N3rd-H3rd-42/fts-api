@@ -1,7 +1,6 @@
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_NUMBER, ADMIN_NUMBER } =
   process.env;
 const twilioClient = require("twilio")(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
-const PatientModel = require("../models/Patient");
 const TransportationRequestModel = require("../models/TransportationRequest");
 
 const formatTimeString = (timeString) => {
@@ -23,8 +22,6 @@ module.exports = {
       date,
       time,
     } = request.body;
-    const patient = await PatientModel.findOne({ ahcccsId: ahcccsId });
-    if (patient) {
       const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
         time
       )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRider name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}\n`;
@@ -37,7 +34,7 @@ module.exports = {
         .then(async (message) => {
           const requestDate = new Date(`${date}T${time}:00`);
           const newRideRequest = new TransportationRequestModel({
-            patient: patient._id,
+            // patient: patient._id,
             requesterType,
             name,
             phone,
@@ -51,8 +48,5 @@ module.exports = {
           console.log(error);
           return response.status(500).json({ message: 'SMS gateway error'})
         })
-    } else {
-      return response.status(400).json({});
-    }
   },
 };
