@@ -24,32 +24,35 @@ module.exports = {
       facilityLocation,
       patientsName,
     } = request.body;
-    console.log(request.body)
-      const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
-        time
-      )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRequester name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}${facilityLocation ? `\nfacility location: ${facilityLocation}` : ''}${patientsName ? `\npatients name: ${patientsName}` : ''}`;
-      twilioClient.messages
-        .create({
-          body: smsBody,
-          from: TWILIO_NUMBER,
-          to: ADMIN_NUMBER,
-        })
-        .then(async (message) => {
-          const requestDate = new Date(`${date}T${time}:00`);
-          const newRideRequest = new TransportationRequestModel({
-            // patient: patient._id,
-            requesterType,
-            name,
-            phone,
-            pickup,
-            destination,
-            requestDate,
-          });
-          await TransportationRequestModel.bulkSave([newRideRequest]);
-          return response.status(200).json({});
-        }).catch((error) => {
-          console.log(error);
-          return response.status(500).json({ message: 'SMS gateway error'})
-        })
+    console.log(request.body);
+    const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
+      time
+    )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRequester name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}${
+      facilityLocation ? `\nfacility location: ${facilityLocation}` : ""
+    }${patientsName ? `\npatients name: ${patientsName}` : ""}`;
+    twilioClient.messages
+      .create({
+        body: smsBody,
+        from: TWILIO_NUMBER,
+        to: ADMIN_NUMBER,
+      })
+      .then(async (message) => {
+        const requestDate = new Date(`${date}T${time}:00`);
+        const newRideRequest = new TransportationRequestModel({
+          // patient: patient._id,
+          requesterType,
+          name,
+          phone,
+          pickup,
+          destination,
+          requestDate,
+        });
+        await TransportationRequestModel.bulkSave([newRideRequest]);
+        return response.status(200).json({});
+      })
+      .catch((error) => {
+        console.log(error);
+        return response.status(500).json({ message: "SMS gateway error" });
+      });
   },
 };
