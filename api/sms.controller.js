@@ -21,10 +21,13 @@ module.exports = {
       destination,
       date,
       time,
+      facilityLocation,
+      patientsName,
     } = request.body;
+    console.log(request.body)
       const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
         time
-      )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRider name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}\n`;
+      )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRequester name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}${facilityLocation ? `\nfacility location: ${facilityLocation}` : ''}${patientsName ? `\npatients name: ${patientsName}` : ''}`;
       twilioClient.messages
         .create({
           body: smsBody,
