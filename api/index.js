@@ -26,4 +26,16 @@ router.route("/request-a-ride").post(smsController.sendRideRequest);
 
 router.route('/ride-requests').get(rideRequestController.getAll);
 
+router.route("/ride-requests").post(rideController.createOne);
+
+router
+  .route("/ride-requests/:rideId")
+  .get(patientController.getPatientById)
+  .put(patientController.updateOne);
+
+// Need to apply ride pending / ride completed toggle
+router
+  .route("/ride-requests/toggle-active/:rideId")
+  .put(rideController.toggleActive);
+
 module.exports = router;
