@@ -100,9 +100,11 @@ module.exports = {
       await PatientModel.bulkSave([targetPatient]);
       return response.status(200).json({
         data: targetPatient,
-      })
+      });
     } catch (error) {
-      return response.status(404).json({ message: "can not find patient", data: error });
+      return response
+        .status(404)
+        .json({ message: "can not find patient", data: error });
     }
   },
   getAll: async (request, response) => {
@@ -125,6 +127,23 @@ module.exports = {
       return response.status(200).json({ data: targetPatient });
     } else {
       return response.status(404).json({ err: "patient not found" });
+    }
+  },
+  deleteOne: async (request, response) => {
+    try {
+      const patient = await PatientModel.findByIdAndDelete(
+        request.params.patientId
+      );
+      return response
+        .status(200)
+        .json({
+          message: `removed entity ${patient._id} successfully`,
+          data: patient,
+        });
+    } catch (error) {
+      return response
+        .status(404)
+        .json({ message: "can not find patient by id", data: error });
     }
   },
 };

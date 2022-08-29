@@ -10,7 +10,8 @@ router.route("/patient").post(patientController.createOne);
 router
   .route("/patient/:patientId")
   .get(patientController.getPatientById)
-  .put(patientController.updateOne);
+  .put(patientController.updateOne)
+  .delete(patientController.deleteOne);
 
 router.route("/patients").get(patientController.getAll);
 
