@@ -46,6 +46,9 @@ module.exports = {
           pickup,
           destination,
           requestDate,
+          ahcccsId,
+          facilityLocation,
+          patientsName,
         });
         await TransportationRequestModel.bulkSave([newRideRequest]);
         return response.status(200).json({});

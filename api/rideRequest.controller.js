@@ -20,7 +20,14 @@ module.exports = {
       console.log(error);
       return response
         .status(404)
-        .json({ message: "Can not find ride request by id" });
+        .json({ message: "Can not find ride request by id", data: error });
     }
   },
+  createOne: async (request, response) => {
+    try {
+        
+    } catch (error) {
+        return response.status(500).json({ message: `error processing request`, data: error })
+    }
+  }
 };
