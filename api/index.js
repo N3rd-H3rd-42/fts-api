@@ -33,8 +33,9 @@ router
   .route("/ride-request/:id")
   .get(rideRequestController.getOne)
   .put(rideRequestController.updateOne)
+  .delete(rideRequestController.deleteOne);
 
-  router
+router
   .route("/ride-request/toggle/:id")
   .post(rideRequestController.toggleActive);
 

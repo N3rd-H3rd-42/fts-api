@@ -95,14 +95,33 @@ module.exports = {
   },
   toggleActive: async (request, response) => {
     try {
-        const rideRequest = await TransportationRequestModel.findById(request.params.id);
-        rideRequest.isActive = !rideRequest.isActive;
-        await TransportationRequestModel.bulkSave([rideRequest]);
-        return response.status(200).json({ data: rideRequest });
+      const rideRequest = await TransportationRequestModel.findById(
+        request.params.id
+      );
+      rideRequest.isActive = !rideRequest.isActive;
+      await TransportationRequestModel.bulkSave([rideRequest]);
+      return response.status(200).json({ data: rideRequest });
     } catch (error) {
-        return response
+      return response
         .status(404)
         .json({ message: "can not find ride request", data: error });
     }
-  }
+  },
+  deleteOne: async (request, response) => {
+    try {
+      const rideRequest = await TransportationRequestModel.findByIdAndDelete(
+        request.params.id
+      );
+      return response
+        .status(200)
+        .json({
+          message: `removed entity ${rideRequest._id} successfully`,
+          data: rideRequest,
+        });
+    } catch (error) {
+      return response
+        .status(404)
+        .json({ message: "can not find ride request by id", data: error });
+    }
+  },
 };
