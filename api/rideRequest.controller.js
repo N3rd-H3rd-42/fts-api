@@ -25,9 +25,36 @@ module.exports = {
   },
   createOne: async (request, response) => {
     try {
-        
+      const {
+        requesterType,
+        name,
+        phone,
+        ahcccsId,
+        pickup,
+        destination,
+        date,
+        time,
+        facilityLocation,
+        patientsName,
+      } = request.body;
+      const requestDate = new Date(`${date}T${time}:00`);
+      const newRideRequest = new TransportationRequestModel({
+        requesterType,
+        name,
+        phone,
+        ahcccsId,
+        pickup,
+        destination,
+        requestDate,
+        facilityLocation,
+        patientsName,
+      })
+      await TransportationRequestModel.bulkSave([newRideRequest]);
+      return response.status(200).json({ data: newRideRequest })
     } catch (error) {
-        return response.status(500).json({ message: `error processing request`, data: error })
+      return response
+        .status(500)
+        .json({ message: `error processing request`, data: error });
     }
-  }
+  },
 };

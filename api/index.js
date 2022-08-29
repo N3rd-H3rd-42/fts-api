@@ -28,4 +28,6 @@ router.route('/ride-requests').get(rideRequestController.getAll);
 
 router.route('/ride-request/:id').get(rideRequestController.getOne);
 
+router.route('/ride-request').post(rideRequestController.createOne);
+
 module.exports = router;
