@@ -85,7 +85,7 @@ module.exports = {
       if (facilityLocation)
         updatedRideRequest.facilityLocation = facilityLocation;
       if (patientsName) updatedRideRequest.patientsName = patientsName;
-      await TransportationRequestModel.bulkSave(updatedRideRequest);
+      await TransportationRequestModel.bulkSave([updatedRideRequest]);
       return response.status(200).json({ data: updatedRideRequest });
     } catch (error) {
       return response
@@ -93,4 +93,16 @@ module.exports = {
         .json({ message: "can not find ride request", data: error });
     }
   },
+  toggleActive: async (request, response) => {
+    try {
+        const rideRequest = await TransportationRequestModel.findById(request.params.id);
+        rideRequest.isActive = !rideRequest.isActive;
+        await TransportationRequestModel.bulkSave([rideRequest]);
+        return response.status(200).json({ data: rideRequest });
+    } catch (error) {
+        return response
+        .status(404)
+        .json({ message: "can not find ride request", data: error });
+    }
+  }
 };

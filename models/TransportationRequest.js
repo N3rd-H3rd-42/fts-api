@@ -37,7 +37,11 @@ const TransportationRequestSchema = new mongoose.Schema({
   },
   patientsName: {
     type: String,
-  }
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const TransportationRequestModel = mongoose.model(

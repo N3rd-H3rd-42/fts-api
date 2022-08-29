@@ -33,5 +33,8 @@ router
   .get(rideRequestController.getOne)
   .put(rideRequestController.updateOne)
 
+  router
+  .route("/ride-request/toggle/:id")
+  .post(rideRequestController.toggleActive);
 
 module.exports = router;
