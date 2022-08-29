@@ -26,4 +26,6 @@ router.route("/request-a-ride").post(smsController.sendRideRequest);
 
 router.route('/ride-requests').get(rideRequestController.getAll);
 
+router.route('/ride-request/:id').get(rideRequestController.getOne);
+
 module.exports = router;
