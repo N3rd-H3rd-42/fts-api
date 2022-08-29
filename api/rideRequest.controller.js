@@ -48,13 +48,49 @@ module.exports = {
         requestDate,
         facilityLocation,
         patientsName,
-      })
+      });
       await TransportationRequestModel.bulkSave([newRideRequest]);
-      return response.status(200).json({ data: newRideRequest })
+      return response.status(201).json({ data: newRideRequest });
     } catch (error) {
       return response
         .status(500)
         .json({ message: `error processing request`, data: error });
+    }
+  },
+  updateOne: async (request, response) => {
+    try {
+      const {
+        requesterType,
+        name,
+        phone,
+        ahcccsId,
+        pickup,
+        destination,
+        date,
+        time,
+        facilityLocation,
+        patientsName,
+      } = request.body;
+      let updatedRideRequest = await TransportationRequestModel.findById(
+        request.params.id
+      );
+      if (requesterType) updatedRideRequest.requesterType = requesterType;
+      if (name) updatedRideRequest.name = name;
+      if (phone) updatedRideRequest.phone = phone;
+      if (ahcccsId) updatedRideRequest.ahcccsId = ahcccsId;
+      if (pickup) updatedRideRequest.pickup = pickup;
+      if (destination) updatedRideRequest.destination = destination;
+      if (date && time)
+        updatedRideRequest.requestDate = new Date(`${date}T${time}:00`);
+      if (facilityLocation)
+        updatedRideRequest.facilityLocation = facilityLocation;
+      if (patientsName) updatedRideRequest.patientsName = patientsName;
+      await TransportationRequestModel.bulkSave(updatedRideRequest);
+      return response.status(200).json({ data: updatedRideRequest });
+    } catch (error) {
+      return response
+        .status(404)
+        .json({ message: "can not find ride request", data: error });
     }
   },
 };
