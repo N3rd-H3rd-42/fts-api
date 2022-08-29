@@ -92,19 +92,17 @@ module.exports = {
     }
   },
   toggleActive: async (request, response) => {
-    const targetPatient = await PatientModel.findById({
-      _id: request.params.patientId,
-    });
-    if (!targetPatient) {
-      return response.status(400).json({ error: "can not find patient" });
-    } else {
-      const targetPatientCurrentStatus = targetPatient.isActive;
-      targetPatient.isActive = !targetPatientCurrentStatus;
-      await PatientModel.bulkSave([targetPatient]);
-      const newPatientList = await PatientModel.find();
-      return response.status(200).json({
-        patientList: newPatientList,
+    try {
+      const targetPatient = await PatientModel.findById({
+        _id: request.params.patientId,
       });
+      targetPatient.isActive = !targetPatient.isActive;
+      await PatientModel.bulkSave([targetPatient]);
+      return response.status(200).json({
+        data: targetPatient,
+      })
+    } catch (error) {
+      return response.status(404).json({ message: "can not find patient", data: error });
     }
   },
   getAll: async (request, response) => {
