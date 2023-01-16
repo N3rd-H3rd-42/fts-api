@@ -5,6 +5,7 @@ module.exports = {
     const {
       firstName,
       lastName,
+      birthdate,
       ahcccsId,
       locationName,
       locationAddress1,
@@ -37,6 +38,7 @@ module.exports = {
         const newPatient = await new PatientModel({
           firstName,
           lastName,
+          birthdate,
           ahcccsId,
           locationName,
           locationAddress1,
@@ -59,6 +61,7 @@ module.exports = {
     const {
       firstName,
       lastName,
+      birthdate,
       ahcccsId,
       locationName,
       locationAddress1,
@@ -76,6 +79,7 @@ module.exports = {
     } else {
       if (firstName) targetPatient.firstName = firstName;
       if (lastName) targetPatient.lastName = lastName;
+      if (birthdate) targetPatient.birthdate = birthdate;
       if (ahcccsId) targetPatient.ahcccsId = ahcccsId;
       if (locationName) targetPatient.locationName = locationName;
       if (locationAddress1) targetPatient.locationAddress1 = locationAddress1;

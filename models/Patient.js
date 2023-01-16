@@ -7,6 +7,9 @@ const PatientSchema = new mongoose.Schema({
   lastName: {
     type: String,
   },
+  birthdate: {
+    type: String,
+  },
   ahcccsId: {
     type: String,
     unique: true,
