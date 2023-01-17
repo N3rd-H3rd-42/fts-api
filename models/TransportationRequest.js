@@ -20,6 +20,9 @@ const TransportationRequestSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
+  birthdate: {
+    type: String,
+  },
   pickup: {
     type: String,
   },

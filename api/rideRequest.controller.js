@@ -29,6 +29,7 @@ module.exports = {
         requesterType,
         name,
         phone,
+        birthdate,
         ahcccsId,
         pickup,
         destination,
@@ -42,6 +43,7 @@ module.exports = {
         requesterType,
         name,
         phone,
+        birthdate,
         ahcccsId,
         pickup,
         destination,
@@ -63,6 +65,7 @@ module.exports = {
         requesterType,
         name,
         phone,
+        birthdate,
         ahcccsId,
         pickup,
         destination,
@@ -77,6 +80,7 @@ module.exports = {
       if (requesterType) updatedRideRequest.requesterType = requesterType;
       if (name) updatedRideRequest.name = name;
       if (phone) updatedRideRequest.phone = phone;
+      if (birthdate) updatedRideRequest.birthdate = birthdate;
       if (ahcccsId) updatedRideRequest.ahcccsId = ahcccsId;
       if (pickup) updatedRideRequest.pickup = pickup;
       if (destination) updatedRideRequest.destination = destination;
