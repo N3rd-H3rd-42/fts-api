@@ -25,7 +25,6 @@ module.exports = {
       facilityLocation,
       patientsName,
     } = request.body;
-    console.log(request.body);
     const smsBody = `There is a new ride request\nRequester type: ${requesterType}\nFor date and time: ${date} @ ${formatTimeString(
       time
     )}\nPickup location: ${pickup}\nDropoff location: ${destination}\nRequester name: ${name}\nAHCCCS ID:${ahcccsId}\ncontact number: ${phone}${
