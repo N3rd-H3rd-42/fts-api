@@ -24,6 +24,7 @@ module.exports = {
     }
   },
   createOne: async (request, response) => {
+    console.log(request.body, request, response, 'CREATE API')
     try {
       const {
         requesterType,
