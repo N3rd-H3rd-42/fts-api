@@ -10,12 +10,12 @@ const routes = require("./routes");
 
 const PORT = process.env.PORT || 8000;
 
-var corsOptions = {
+const corsOptions = {
   origin: "https://www.fts-nemt.com/",
   optionsSuccessStatus: 200 // For legacy browser support
   }
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
